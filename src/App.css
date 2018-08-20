@@ -1,0 +1,11 @@
+.add-item {
+  color: cornflowerblue;
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+.remove-item {
+  color: deeppink;
+  text-decoration: underline;
+  cursor: pointer;
+}
