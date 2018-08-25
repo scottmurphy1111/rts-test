@@ -17,7 +17,7 @@ const ItemList = ({items, add}) => {
   const itemEntry = items.map((item) => {    
     return (<Item item={item} key={item.id} add={add} />);
   });
-  return (<ul style={{listStyle: 'none'}}>{itemEntry}</ul>)
+  return (<ul style={{flex: 1, listStyle: 'none'}}>{itemEntry}</ul>)
 };
 
 const CartItem = ({item, remove}) => {
@@ -32,7 +32,7 @@ const Cart = ({items, remove}) => {
   const itemEntry = items.map((item) => {
     return (<CartItem item={item} key={item.id} remove={remove} />);
   });  
-  return (<ul style={{listStyle: 'none'}}>{itemEntry}</ul>)
+  return (<ul style={{flex: 1, listStyle: 'none'}}>{itemEntry}</ul>)
 };
 
 class App extends Component {
@@ -67,56 +67,32 @@ class App extends Component {
     }
   }
 
-  addItem(val) {
-    const addItem = val;
-    
+  addItem(addItem) {
     if(!this.state.cartItems.includes(addItem)) {
-      const findItem = this.state.data.find((item, index) =>  {
-        return this.state.data[index] === addItem;
-      });
-      
-      findItem.added = true;   
-      
-      this.state.cartItems.push(addItem);
-      this.setState({cartItems: this.state.cartItems});
+      addItem.added = true;   
+      this.setState(state => ({
+        cartItems: [...state.cartItems, addItem]
+      }));
     }
   }
 
-  removeItem(val) {
-    const removeItem = val;
-
-    const remainingCartItems = this.state.cartItems.filter((item, index) => {
-      if(this.state.cartItems[index] !== removeItem) {
-        return item;
-      } else {
-        return null;
-      }
-    });
-
+  removeItem(removeItem) {
+    removeItem.added = false;
+    const remainingCartItems = this.state.cartItems.filter((item) => item.id !== removeItem.id );
     this.setState({cartItems: remainingCartItems});
-
-    const findItem = this.state.data.find((item, index) => {
-      return this.state.data[index] === removeItem;
-    });
-    
-    findItem.added = false;
   }
 
   render() {
     return (
-      <div style={{display: 'block', width: '100%'}}>
-        <div style={{display: 'inline-block', width: '50%', verticalAlign: 'top'}}>
-          <ItemList 
-            items={this.state.data}
-            add={this.addItem.bind(this)}
-          />
-        </div>
-        <div style={{display: 'inline-block', width: '50%', verticalAlign: 'top'}}>
-          <Cart 
-            items={this.state.cartItems}
-            remove={this.removeItem.bind(this)}
-          />
-        </div>
+      <div className="app">
+        <ItemList 
+          items={this.state.data}
+          add={this.addItem.bind(this)}
+        />
+        <Cart 
+          items={this.state.cartItems}
+          remove={this.removeItem.bind(this)}
+        />
       </div>
     );
   }
